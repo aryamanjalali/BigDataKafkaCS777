@@ -85,14 +85,12 @@ Streamlit Live Chart:
 chart_temp.line_chart(df, x='timestamp', y='temperature')
 chart_humidity.line_chart(df, x='timestamp', y='humidity')
 
-<<<<<<< HEAD
 Run dashboard → streamlit run dashboard.py
 Opens in browser
-=======
+
 ----------------------------------------------------------------------
 DATASET EXPLANATION
 ----------------------------------------------------------------------
->>>>>>> dff6077 (Code comments)
 
 Dataset Type:
 Synthetic weather sensor data generated in real time — no external dataset required.
