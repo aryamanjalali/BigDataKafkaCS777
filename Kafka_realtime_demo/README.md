@@ -117,7 +117,6 @@ Anyone can regenerate the dataset by running producer.py.
 SUMMARY
 ----------------------------------------------------------------------
 
-<<<<<<< HEAD
 Explanation:
 This demo demonstrates Kafka as a real-time message broker connecting producers and consumers.
 Producer → Kafka Broker → Consumer/Dashboard
@@ -134,4 +133,3 @@ This demo shows:
 - Real-time IoT data streaming into Kafka
 - Live visualization with Streamlit
 - End-to-end local Kafka setup using Docker (Confluent 7.6.1)
->>>>>>> dff6077 (Code comments)
