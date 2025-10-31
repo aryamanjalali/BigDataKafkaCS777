@@ -1,21 +1,23 @@
 services:
+  # Zookeeper service — manages Kafka cluster coordination and metadata
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.1
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_CLIENT_PORT: 2181      # Default client connection port
+      ZOOKEEPER_TICK_TIME: 2000        # Basic time unit for heartbeats/session management
     ports:
-      - "2181:2181"
+      - "2181:2181"                    # Expose Zookeeper port to host
 
+  # Kafka broker service — handles message publishing and consumption
   kafka:
     image: confluentinc/cp-kafka:7.6.1
     depends_on:
-      - zookeeper
+      - zookeeper                      # Ensure Zookeeper starts before Kafka
     ports:
-      - "9092:9092"
+      - "9092:9092"                    # Expose Kafka broker port to host
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1               # Unique ID for this Kafka broker
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Connect Kafka to Zookeeper container
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Advertise broker address for clients
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT # Define communication protocol
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Single-broker setup (no replication)

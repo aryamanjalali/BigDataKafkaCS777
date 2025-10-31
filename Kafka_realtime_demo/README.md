@@ -1,57 +1,125 @@
-METCS777 Term Paper – Real-Time Data Pipeline with Kafka
-Authors: Aryaman Jalali, Aditya Kocherlakota
-Course: MET CS 777 – Big Data Analytics (Fall 2025)
+MET CS 777 — Kafka Real-Time Data Streaming Demo  
+Authors: Aryaman Jalali & Aditya Kocherlakota  
 
-Overview:
-This demo builds a real-time data pipeline using Apache Kafka to simulate IoT weather sensor data streaming continuously.
-The producer sends temperature and humidity readings into Kafka, and the consumer processes them in real time.
-A Streamlit dashboard visualizes the live data feed.
+----------------------------------------------------------------------
+ENVIRONMENT SETUP
+----------------------------------------------------------------------
 
-Environment Setup:
+System Requirements:
+- macOS 14+ (Apple Silicon) / Windows / Linux
+- VS Code with integrated terminal
+- Docker Desktop v4.32+
+- Python 3.12+
+- Streamlit for live dashboard visualization
 
-Install Docker Desktop and ensure it is running.
+Python Libraries:
+pip install kafka-python streamlit pandas matplotlib
 
-Open this folder in VS Code.
+Docker Configuration:
+This demo uses Confluent Kafka 7.6.1 and Zookeeper, configured via docker-compose.yml.
 
-Start Kafka and Zookeeper:
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+Start the services:
 docker compose up -d
 
-Install Python dependencies:
-pip install -r requirements.txt
+Verify running containers:
+docker ps
 
-Components:
+----------------------------------------------------------------------
+HOW TO RUN THE CODE
+----------------------------------------------------------------------
 
-producer.py – Simulates continuous weather sensor data and publishes to Kafka.
+This demo simulates IoT weather sensors streaming temperature and humidity data into Kafka, visualized live through Streamlit.
 
-consumer.py – Consumes data and prints alerts when temperature > 30°C.
+Run each command in a separate terminal:
 
-dashboard.py – Streamlit dashboard for live charts and alerts.
+1. Start the Kafka Producer:
+   python producer.py
 
-docker-compose.yml – Runs local Kafka + Zookeeper.
+2. Start the Kafka Consumer:
+   python consumer.py
 
-requirements.txt – Python dependencies.
+3. Launch the Streamlit Dashboard:
+   streamlit run dashboard.py
 
-How to Run:
+Expected Output:
+- Producer sends continuous temperature & humidity readings.
+- Consumer receives the data and prints alerts for high temperature (>30°C).
+- Dashboard updates live with temperature and humidity trends.
 
-Start Kafka → docker compose up -d
+----------------------------------------------------------------------
+CODE SNIPPETS
+----------------------------------------------------------------------
 
-Run producer → python producer.py
+Kafka Producer:
+data = {
+  "sensor_id": random.randint(100, 999),
+  "temperature": round(random.uniform(20.0, 40.0), 2),
+  "humidity": round(random.uniform(30.0, 80.0), 2),
+  "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+}
+producer.send('weather-data', value=data)
 
-Run consumer → python consumer.py
+Streamlit Live Chart:
+chart_temp.line_chart(df, x='timestamp', y='temperature')
+chart_humidity.line_chart(df, x='timestamp', y='humidity')
 
+<<<<<<< HEAD
 Run dashboard → streamlit run dashboard.py
 Opens in browser
+=======
+----------------------------------------------------------------------
+DATASET EXPLANATION
+----------------------------------------------------------------------
+>>>>>>> dff6077 (Code comments)
 
-Results:
+Dataset Type:
+Synthetic weather sensor data generated in real time — no external dataset required.
 
-Continuous streaming of IoT sensor data through Kafka topics.
+Generation Logic:
+Each second, the producer script generates:
+{
+  "sensor_id": 312,
+  "temperature": 29.85,
+  "humidity": 53.22,
+  "timestamp": "2025-10-30 19:22:15"
+}
 
-Real-time alerts for high temperatures shown in console.
+Fields:
+- sensor_id: Random integer (100–999)
+- temperature: Random float (20–40°C)
+- humidity: Random float (30–80%)
+- timestamp: Current system time
 
-Dynamic dashboard with live-updating temperature/humidity charts.
+A sample parquet file (weather_sample.parquet) is included for reference.
+Anyone can regenerate the dataset by running producer.py.
 
-Summary statistics (average temperature, humidity, total messages).
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
 
+<<<<<<< HEAD
 Explanation:
 This demo demonstrates Kafka as a real-time message broker connecting producers and consumers.
 Producer → Kafka Broker → Consumer/Dashboard
@@ -63,3 +131,9 @@ Produced: {'sensor_id': 124, 'temperature': 35.37, 'humidity': 48.39, 'timestamp
 
 Dashboard:
 Real-time charts for temperature/humidity, live alerts, and summary stats at the bottom.
+=======
+This demo shows:
+- Real-time IoT data streaming into Kafka
+- Live visualization with Streamlit
+- End-to-end local Kafka setup using Docker (Confluent 7.6.1)
+>>>>>>> dff6077 (Code comments)

@@ -1,64 +1,126 @@
-METCS777 Term Paper – Event-Driven Microservices using Kafka
-Authors: Aryaman Jalali, Aditya Kocherlakota
-Course: MET CS 777 – Big Data Analytics (Fall 2025)
+MET CS 777 — Kafka Microservices Architecture Demo  
+Authors: Aryaman Jalali & Aditya Kocherlakota  
 
-Overview:
-This demo implements an Event-Driven Microservices Architecture (EDA) using Apache Kafka.
-Three independent services communicate asynchronously through Kafka topics, simulating an Amazon-like order lifecycle:
-Order Placed → Payment Processed → Customer Notified.
-Each service publishes or consumes messages without knowing the others, showing Kafka’s ability to decouple systems.
+----------------------------------------------------------------------
+ENVIRONMENT SETUP
+----------------------------------------------------------------------
 
-Environment Setup:
+System Requirements:
+- macOS 14+ / Windows / Linux
+- VS Code with integrated terminal
+- Docker Desktop v4.32+
+- Python 3.12+
+- Kafka-python for event publishing and consumption
 
-Ensure Docker Desktop is running.
+Python Libraries:
+pip install kafka-python
 
-Start Kafka and Zookeeper:
+Docker Configuration:
+Kafka and Zookeeper are defined in docker-compose.yml.
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+Start the services:
 docker compose up -d
-docker ps
 
-Install dependencies:
-pip install -r requirements.txt
+----------------------------------------------------------------------
+HOW TO RUN THE CODE
+----------------------------------------------------------------------
 
-Components:
+This demo simulates an e-commerce microservices workflow with event-driven communication between Order, Payment, and Notification services.
 
-order_service.py – Publishes order_created events to Kafka (order_topic).
+Run each service in its own terminal:
 
-payment_service.py – Consumes order_topic, processes payments, and publishes payment_topic events.
+1. Order Service (publishes new orders):
+   python order_service.py
 
-notification_service.py – Consumes payment_topic and simulates sending user notifications.
+2. Payment Service (consumes orders, processes payments):
+   python payment_service.py
 
-docker-compose.yml – Kafka + Zookeeper setup.
+3. Notification Service (sends user notifications):
+   python notification_service.py
 
-requirements.txt – Python dependencies.
+Expected Flow:
+- Order Service publishes ‘order_created’ messages.
+- Payment Service consumes them, simulates success/failure, and sends ‘payment_processed’.
+- Notification Service consumes payment events and prints success/failure messages.
 
-How to Run the Services:
-Open three VS Code terminals:
-Terminal 1 → python order_service.py
-Terminal 2 → python payment_service.py
-Terminal 3 → python notification_service.py
+----------------------------------------------------------------------
+CODE SNIPPETS
+----------------------------------------------------------------------
+
+Order Service:
+order = {
+  "order_id": 1001,
+  "user_id": random.randint(1, 100),
+  "amount": round(random.uniform(10.0, 500.0), 2),
+  "status": "created"
+}
+producer.send('order_topic', value=order)
+
+Payment Service:
+payment = {
+  "order_id": order["order_id"],
+  "status": random.choice(["payment_successful", "payment_failed"])
+}
+producer.send('payment_topic', value=payment)
+
+Notification Service:
+if status == "payment_successful":
+  print(f"✅ Payment Successful for Order {payment['order_id']}")
+else:
+  print(f"❌ Payment Failed for Order {payment['order_id']}")
+
+----------------------------------------------------------------------
+DATASET EXPLANATION
+----------------------------------------------------------------------
+
+Dataset Type:
+Synthetic e-commerce transaction stream generated dynamically.
 
 Data Flow:
-[Order Service] → (order_topic) → [Payment Service] → (payment_topic) → [Notification Service]
+Each order event contains:
+{
+  "order_id": 1002,
+  "user_id": 37,
+  "amount": 199.99,
+  "status": "payment_successful"
+}
 
-Results Example:
-Order Service:
-📦 Order Created: {'order_id': 1001, 'user_id': 18, 'amount': 120.5, 'status': 'created'}
-Payment Service:
-🧾 Received Order ...
-✅ Payment Event Sent: {'order_id': 1001, 'user_id': 18, 'amount': 120.5, 'status': 'payment_successful'}
-Notification Service:
-✅ Payment Successful for Order 1001 (User 18)
-📨 Email sent to customer confirming successful order.
+Fields:
+- order_id: Incremental integer starting from 1000
+- user_id: Random integer between 1–100
+- amount: Random purchase amount between $10–$500
+- status: Randomly assigned as “payment_successful” or “payment_failed”
 
-Explanation:
-This demo shows Kafka’s publish-subscribe model for decoupled microservices.
-Each service reacts to events rather than API calls, enabling asynchronous communication and scalability.
-In production, these services could scale horizontally or run across containers.
+Dataset can be regenerated by simply running the order_service.py.
 
-Key Takeaways:
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
 
-Kafka enables loose coupling between services.
-
-Each service focuses on its own domain logic (orders, payments, notifications).
-
-Architecture supports fault tolerance and horizontal scalability.
+This demo shows:
+- Event-driven microservices using Kafka
+- Producer/Consumer pattern across independent services
+- Fault-tolerant messaging between Order, Payment, and Notification
+- Local Confluent Kafka 7.6.1 setup with Docker for reproducibility
