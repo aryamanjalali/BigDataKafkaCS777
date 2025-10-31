@@ -39,8 +39,8 @@ Run producer → python producer.py
 
 Run consumer → python consumer.py
 
-(Optional) Run dashboard → streamlit run dashboard.py
-Opens in browser at http://localhost:8501
+Run dashboard → streamlit run dashboard.py
+Opens in browser
 
 Results:
 
