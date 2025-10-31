@@ -14,6 +14,7 @@ Ensure Docker Desktop is running.
 
 Start Kafka and Zookeeper:
 docker compose up -d
+docker ps
 
 Install dependencies:
 pip install -r requirements.txt
