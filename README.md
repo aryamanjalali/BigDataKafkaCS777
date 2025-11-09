@@ -1,76 +1,167 @@
-# BigDataKafkaCS777
+# Apache Kafka: Real-Time Data Pipelines & Event-Driven Microservices
 
-This repository contains the complete implementation for our Big Data Analytics (CS777) Term Paper project, focused on demonstrating Kafka-based real-time data pipelines and microservice-driven event communication.
+A comprehensive implementation demonstrating Kafka-based real-time data pipelines and microservice-driven event communication. This project showcases two distinct use cases: real-time IoT data streaming and event-driven microservices architecture.
 
-The repository is divided into two main components, each representing a unique Kafka use case:
+## Overview
 
-Project Structure
-1. Kafka Realtime Demo (Kafka_realtime_demo/)
+This repository contains the complete implementation for the Big Data Analytics (CS777) Term Paper project. It demonstrates advanced Kafka concepts including real-time data streaming, event-driven microservices, and scalable data pipeline architectures.
 
-A real-time data streaming pipeline that simulates IoT weather sensor data, publishes it to Kafka topics, and visualizes it dynamically using Streamlit dashboards.
+## Features
 
-Producer: Streams live temperature and humidity data
+- **Real-Time Data Streaming**: IoT sensor data streaming with live visualization
+- **Event-Driven Microservices**: Independent microservices communicating via Kafka
+- **Dockerized Setup**: Complete Docker Compose configurations for easy deployment
+- **Interactive Dashboards**: Streamlit-based real-time monitoring
+- **Scalable Architecture**: Designed for production-ready implementations
 
-Consumer: Processes and logs data from Kafka
+## Project Structure
 
-Dashboard: Interactive Streamlit app for real-time monitoring
+The repository is divided into two main components:
 
-Docker Setup: Includes docker-compose.yml to spin up Kafka and Zookeeper
+### 1. Kafka Realtime Demo (`Kafka_realtime_demo/`)
 
-README: Detailed setup, execution steps, and dataset explanation
+A real-time data streaming pipeline that simulates IoT weather sensor data.
 
-2. Kafka Microservices Demo (kafka_microservices_demo/)
+**Components:**
+- **Producer**: Streams live temperature and humidity data to Kafka topics
+- **Consumer**: Processes and logs data from Kafka
+- **Dashboard**: Interactive Streamlit app for real-time monitoring
+- **Docker Setup**: Includes `docker-compose.yml` to spin up Kafka and Zookeeper
 
-A simulation of event-driven communication between independent microservices using Kafka.
+**Features:**
+- Real-time data ingestion
+- Dynamic visualization
+- Sub-second data processing
+- AWS S3 integration for data storage
 
-Order Service: Publishes new orders
+### 2. Kafka Microservices Demo (`kafka_microservices_demo/`)
 
-Payment Service: Processes payments and updates order status
+A simulation of event-driven communication between independent microservices.
 
-Notification Service: Sends alerts based on payment results
+**Services:**
+- **Order Service**: Publishes new orders to Kafka
+- **Payment Service**: Processes payments and updates order status
+- **Notification Service**: Sends alerts based on payment results
 
-Docker Setup: Uses Confluent Kafka 7.6.1 for local message streaming
+**Features:**
+- Event-driven architecture
+- Service decoupling
+- Fault tolerance
+- Scalable design
 
-README: Step-by-step guide to setup, run, and visualize event flows
+## Technologies Used
 
-Environment Overview
+- **Apache Kafka**: Distributed streaming platform
+- **Docker**: Containerization
+- **Python 3.12**: Core programming language
+- **Streamlit**: Real-time dashboard visualization
+- **AWS EC2/S3**: Cloud infrastructure
+- **Kafka-Python**: Python client for Kafka
+- **Pandas**: Data manipulation
+- **Matplotlib**: Data visualization
 
-macOS 14 (Apple Silicon)
+## Prerequisites
 
-Docker Desktop v4.32+
+- macOS 14 (Apple Silicon) or Linux
+- Docker Desktop v4.32+
+- Python 3.12+
+- pip package manager
 
-Python 3.12
+## Installation
 
-Kafka-Python, Pandas, Streamlit, Matplotlib
+1. Clone the repository:
+```bash
+git clone https://github.com/aryamanjalali/BigDataKafkaCS777.git
+cd BigDataKafkaCS777
+```
 
-Dockerized Confluent Kafka 7.6.1 setup for both demos
+2. Install Python dependencies:
+```bash
+pip install kafka-python streamlit pandas matplotlib docker
+```
 
-Key Learning Objectives
+3. Ensure Docker Desktop is running
 
-Understanding distributed message queues and event-driven systems
+## Usage
 
-Designing scalable real-time data pipelines
+### Kafka Realtime Demo
 
-Integrating Python with Kafka for streaming data analytics
+1. Navigate to the demo directory:
+```bash
+cd Kafka_realtime_demo
+```
 
-Visualizing live data updates in real time
+2. Start Kafka and Zookeeper:
+```bash
+docker-compose up -d
+```
 
-Authors
+3. Run the producer (in a separate terminal):
+```bash
+python producer.py
+```
 
-Aryaman Jalali
+4. Run the consumer (in another terminal):
+```bash
+python consumer.py
+```
 
-Aditya Kocherlakota
+5. Launch the Streamlit dashboard:
+```bash
+streamlit run dashboard.py
+```
 
-Note:
+### Kafka Microservices Demo
 
-Each subproject has its own README.md containing:
+1. Navigate to the demo directory:
+```bash
+cd kafka_microservices_demo
+```
 
-Environment setup
+2. Start Confluent Kafka:
+```bash
+docker-compose up -d
+```
 
-How to run the code
+3. Run each service in separate terminals:
+```bash
+# Terminal 1: Order Service
+python order_service.py
 
-Code snippets
+# Terminal 2: Payment Service
+python payment_service.py
 
-Dataset generation and sample data explanation
+# Terminal 3: Notification Service
+python notification_service.py
+```
 
-You can explore either demo independently or run both to compare real-time streaming vs microservice-based event flow architectures.
+## Key Learning Objectives
+
+- Understanding distributed message queues and event-driven systems
+- Designing scalable real-time data pipelines
+- Integrating Python with Kafka for streaming data analytics
+- Visualizing live data updates in real time
+- Implementing microservices architecture with event-driven communication
+
+## Project Details
+
+Each subproject contains its own detailed README.md with:
+- Environment setup instructions
+- Step-by-step execution guide
+- Code snippets and explanations
+- Dataset generation and sample data explanation
+
+## Authors
+
+- **Aryaman Jalali** - [GitHub](https://github.com/aryamanjalali) | [LinkedIn](https://www.linkedin.com/in/aryamanjalali/)
+- **Aditya Kocherlakota**
+
+## License
+
+This project is for educational and research purposes.
+
+## Acknowledgments
+
+- Apache Kafka community
+- Confluent for Kafka tooling
+- Streamlit for visualization framework
